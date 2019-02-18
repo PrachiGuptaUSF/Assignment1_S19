@@ -6,7 +6,7 @@ namespace Assignment1_S19
     {
         public static void Main()
         {
-            int a = 5, b = 15;
+            int a = 35, b = 15;
             Console.WriteLine("\n The prime numbers between: " + a + " " + b);
             printPrimeNumbers(a, b);
 
@@ -29,7 +29,8 @@ namespace Assignment1_S19
             Console.WriteLine("\n The print triangle function of" + n4 + "values is: ");
             printTriangle(n4);
 
-            int[] arr = new int[] { 1, 2, 3, 2, 2, 1, 3, 2 };
+            //int[] arr = new int[] { 1, 2, 3, 2, 2, 1, 3, 2 };
+            int[] arr = new int[] { 1, 2, 3 };
             Console.WriteLine("\n The compute frequency function of given array" + arr + " is: ");
             computeFrequency(arr);
 
@@ -52,11 +53,24 @@ namespace Assignment1_S19
             try
             {
                 int count = 0;
+                int startNum = 0;
+                int endNum = 0;
 
                 //Handled the logic of invalid numbers, i.e. negative numbers
                 if (x > 0 && y > 0)
                 {
-                    for (int i = x; i <= y; i++)
+                    if (x < y)
+                    {
+                        startNum = x;
+                        endNum = y;
+                    }
+                    else
+                    {
+                        startNum = y;
+                        endNum = x;
+                    }
+
+                    for (int i = startNum; i <= endNum; i++)
                     {
                         for (int j = 2; j < i; j++)
                         {
@@ -91,21 +105,29 @@ namespace Assignment1_S19
          */
         public static double getSeriesResult(int n)
         {
+            double sum = 0;
             try
             {
-                double sum = 0;
-
-                for (int i = 1; i <= n; i++)
+                
+                if (n > 0)
                 {
-                    /*Converting the values of factorial and denominator to Double and doing a division
-                     * and adding each of the individual values to create the final sum of the series.
-                     * 
-                     * Created another function factorial to find the factorial value of given number.
-                     */
-                    sum += Convert.ToDouble(factorial(i)) / Convert.ToDouble((i + 1));
+                    for (int i = 1; i <= n; i++)
+                    {
+                        /*
+                         * Converting the values of factorial and denominator to Double and doing a division
+                         * and adding each of the individual values to create the final sum of the series.
+                         * 
+                         * Created another function factorial to find the factorial value of given number.
+                         */
+                        sum += Convert.ToDouble(factorial(i)) / Convert.ToDouble((i + 1));
 
-                    //Rounding off the sum to two decimal values
-                    sum = Math.Round(sum, 2);
+                        //Rounding off the sum to two decimal values
+                        sum = Math.Round(sum, 2);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Enter a positive value to be converted to a binary number");
                 }
                 return sum;
             }
@@ -114,7 +136,7 @@ namespace Assignment1_S19
                 Console.WriteLine("Exception occured while computing getSeriesResult()");
             }
 
-            return 0;
+            return sum;
         }
 
         /*
@@ -176,6 +198,7 @@ namespace Assignment1_S19
                 long binary_val, decimal_val = 0, base_val = 1, rem;
                 binary_val = n;
 
+
                 /*
                  * A while loop to  divide the binary number by 10 and multiple the tens digit by 2
                  * and add the value to the remainder and run this logic the quotient becomes zero
@@ -183,10 +206,20 @@ namespace Assignment1_S19
                 while (n > 0)
                 {
                     rem = n % 10;
-                    decimal_val = decimal_val + rem * base_val;
-                    n = n / 10;
-                    base_val = base_val * 2;
+                    if (rem == 0 || rem == 1)
+                    {
+
+                        decimal_val = decimal_val + rem * base_val;
+                        n = n / 10;
+                        base_val = base_val * 2;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please enter a valid binary number");
+                        break;
+                    }
                 }
+                
 
                 return decimal_val;
             }
@@ -244,29 +277,44 @@ namespace Assignment1_S19
                 int n = a.Length;
                 int[] freq = new int[100];
                 int i, j, count;
+                int temp = 0;
 
-                for (i = 0; i < n; i++)
-                {
-                    /* Initially initialize frequencies to -1 */
-                    freq[i] = -1;
-                }
-
+                
                 for (i = 0; i < n; i++)
                 {
                     count = 1;
-                    for (j = i + 1; j < n; j++)
+                    for (j = i+1; j < n; j++)
                     {
                         /* If condition to find the duplicate number */
                         if (a[i] == a[j])
                         {
-                            count++;
 
-                            /* To not to count frequency of same number again */
-                            freq[j] = 0;
+                            if (i == 0)
+                            {
+                                temp = a[i];
+                                count++;
+                                freq[i] = count;
+                            }
+                            else if (temp != a[i])
+                            {
+                                temp = a[i];
+                                count++;
+                                freq[i] = count;
+                            }
+                            else
+                            {
+                                /* To not to count frequency of same number again */
+                               freq[i] = 0;
+                            }
                         }
+                        else
+                        {
+                            freq[i] = count;
+                        }
+                       
                     }
 
-                    /* Validation to check if frequency of current number is not counted */
+                    ///* Validation to check if frequency of current number is not counted */
                     if (freq[i] != 0)
                     {
                         freq[i] = count;
